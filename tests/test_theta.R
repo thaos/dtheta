@@ -15,12 +15,12 @@ for(i in 1:rep){
 boxplot(list(ferro = theta_f, sueveges = theta_s, caby = theta_c))
 
 
-rep <- 1
+rep <- 1 # Normally 20
 theta_s <- theta_f <- theta_c <- numeric(rep)
-nT <- 5E4
+nT <- 5E4 # Normally 5E7
 q <- 0.999
 X <- matrix(0, nrow = nT, ncol = rep)
-map <- function(x) ifelse(x >= 0.5, 2*x - 1, 2*x) + 10^-(.Machine$double.digits+1) * round(runif(1, 0, 9))
+map <- function(x) ifelse(x >= 0.5, 2*x - 1, 2*x) + .Machine$double.eps * (runif(1) > 0.5)
 for(i in seq.int(rep)){
   for(t in seq.int(nT)){
     if(t == 1){
@@ -42,7 +42,7 @@ for(i in seq.int(rep)){
   theta_c[i] <- dtheta_onepoint(4/5, X[, i, drop = FALSE], q, "Caby", method.args = list(m = 5))[2]
   cat("/")
 }
-boxplot(list(ferro = theta_f, sueveges = theta_s, caby = theta_c))
+boxplot(list(ferro = theta_f, sueveges = theta_s, caby = theta_c), main = "2x mod 1, z = 4/5")
 
 cat("\n")
 print("0")
@@ -56,6 +56,7 @@ for(i in seq.int(rep)){
   cat("/")
 }
 boxplot(list(ferro = theta_f, sueveges = theta_s, caby = theta_c))
+boxplot(list(ferro = theta_f, sueveges = theta_s, caby = theta_c), main = "2x mod 1, z = 0")
 
 cat("\n")
 print("1/3")
@@ -68,7 +69,7 @@ for(i in seq.int(rep)){
   theta_c[i] <- dtheta_onepoint(1/3, X[, i, drop = FALSE], q, "Caby", method.args = list(m = 5))[2]
   cat("/")
 }
-boxplot(list(ferro = theta_f, sueveges = theta_s, caby = theta_c))
+boxplot(list(ferro = theta_f, sueveges = theta_s, caby = theta_c), main = "2x mod 1, z = 1/3")
 
 cat("\n")
 print("1/pi")
@@ -81,4 +82,5 @@ for(i in seq.int(rep)){
   theta_c[i] <- dtheta_onepoint(1/pi, X[, i, drop = FALSE], q, "Caby", method.args = list(m = 5))[2]
   cat("/")
 }
-boxplot(list(ferro = theta_f, sueveges = theta_s, caby = theta_c))
+boxplot(list(ferro = theta_f, sueveges = theta_s, caby = theta_c), main = "2x mod 1, z = 1/pi")
+

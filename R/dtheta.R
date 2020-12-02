@@ -23,6 +23,7 @@ likelihood <- function(N, Nc, theta, sqSi){
 }
 
 Sueveges <- function(X, rho){
+  # browser()
   q <- 1 - rho
   u <- quantile(X, probs = rho, na.rm=TRUE)
   Li <- which(X > u)
@@ -37,11 +38,12 @@ Sueveges <- function(X, rho){
 }
 
 Caby <- function(X, rho, m){
+  # browser()
   # The threshold is the p-quantile of the distribution
   u <- quantile(X, rho, na.rm=TRUE)
   # Number of exceedences of Y over the threshold u
   iexcess <- (X > u)
-  N <- sum(iexcess)
+  N <- length(which(iexcess))
   p <- numeric(m)
   T <- length(X)
   # Computation of p_k
@@ -57,8 +59,43 @@ Caby <- function(X, rho, m){
       ),
       na.rm = TRUE
     )
-    p[k]=p[k]/N;
+    p[k] <- p[k]/N;
   }
+  # Computation of theta
+  # print(p)
+  theta <- 1 - sum(p)
+  return(theta)
+}
+
+Caby2 <- function(X, rho, m){
+  # The threshold is the p-quantile of the distribution
+  u <- quantile(X, rho, na.rm=TRUE)
+  # Number of exceedences of Y over the threshold u
+  iexcess <- (X > u)
+  N <- length(which(iexcess))
+  p <- numeric(m)
+  T <- length(X)
+  # Computation of p_0
+  for (i in 1:(length(X)-1)){
+    if(X[i]>u & X[i+1]>u){
+      p[1] <- p[1]+1;
+    }
+  }
+  p[1] <- p[1]/N;
+  # Computation of p_k
+  if(m > 1){
+    for (k in 2:m){
+      for(i in 1:(length(X)-k)){
+        if(X[i] > u){ 
+          if (max(X[(i+1):(i+k-1)])<u & X[i+k]>u){
+            p[k] <- p[k]+1
+          }
+        }
+      }
+      p[k] <- p[k]/N;
+    }
+  }
+  # print(p)
   # Computation of theta
   theta <- 1 - sum(p)
   return(theta)
@@ -72,17 +109,18 @@ localdim <- function(X, rho){
 }
 
 dtheta_onepoint <- function(X0, Xref, rho = 0.98, method = "Ferro", method.args = list()){
-    X0 <- matrix(X0, nrow = 1)
+    dim(X0) <- c(1, length(X0))
     if(is.vector(Xref)){
-        Xref <- matrix(Xref, ncol = 1)
+        dim(Xref) <- c(length(Xref), 1)
     }
     dX <- -log(pracma::pdist2(Xref, X0))
-    dX[is.infinite(dX)] <- NA
+    # dX[is.infinite(dX)] <- NA
     dim <- localdim(dX, rho)
     theta <- switch(method,
         Ferro = Ferro(dX, rho),
         Sueveges = Sueveges(dX, rho),
-        Caby = do.call(Caby, c(X = list(dX), rho = list(rho), method.args))
+        Caby = do.call(Caby, c(X = list(dX), rho = list(rho), method.args)),
+        Caby2 = do.call(Caby2, c(X = list(dX), rho = list(rho), method.args))
     )
     dtheta <- c(dim, theta)
     invisible(dtheta)
@@ -91,13 +129,12 @@ dtheta_onepoint <- function(X0, Xref, rho = 0.98, method = "Ferro", method.args 
 
 dtheta_allpoints <- function(X0, Xref = X0, rho = 0.98, method = "Ferro", method.args = list(), ...){
     q <- 1 - rho
-    if(is.vector(Xref)){
-        X0 <- matrix(X0, ncol = 1)
-        Xref <- matrix(Xref, ncol = 1)
+    if(is.vector(Xref) | is.vector(X0)){
+        dim(X0) <- c(length(X0), 1)
+        dim(Xref) <- c(length(Xref), 1)
     }
     dtheta <- future.apply::future_apply(
       X0, 1, dtheta_onepoint, Xref = Xref, rho = rho, method = method, method.args = method.args, ...
     )
     invisible(dtheta)
 }
-

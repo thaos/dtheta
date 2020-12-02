@@ -74,7 +74,10 @@ n <- 1000
 q <- 0.99
 ar1 <- 0.5
 X <- as.vector(arima.sim(list(order=c(1,0,0), ar=ar1), n=n)*sqrt(1-ar1^2))
-future::plan("multisession")
+future::plan("sequential") # default
+# for parallelization
+# future::plan("multicore") # linux
+# future::plan("multisession") # windows
 dtheta_allpoints(X, X, rho = 0.98, method = "Caby", method.args = list(m = 1))
 
 }
