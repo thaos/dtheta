@@ -102,6 +102,7 @@ Caby2 <- function(X, rho, m){
 }
 
 localdim <- function(X, rho){
+  X <- X[!is.infinite(X)]
   u <- quantile(X, probs = rho, na.rm=TRUE)
   mean_excess <- mean(X[X > u], na.rm=TRUE) - u
   dim <- 1 / mean_excess
