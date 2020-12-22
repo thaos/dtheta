@@ -135,7 +135,7 @@ dtheta_allpoints <- function(X0, Xref = X0, rho = 0.98, method = "Ferro", method
         dim(X0) <- c(length(X0), 1)
         dim(Xref) <- c(length(Xref), 1)
     }
-    dtheta <- apply(
+    dtheta <- future.apply::future_apply(
       X0, 1, dtheta_onepoint, Xref = Xref, rho = rho, method = method, method.args = method.args, ...
     )
     invisible(dtheta)
