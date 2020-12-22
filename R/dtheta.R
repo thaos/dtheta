@@ -110,11 +110,12 @@ localdim <- function(X, rho){
 }
 
 dtheta_onepoint <- function(X0, Xref, rho = 0.98, method = "Ferro", method.args = list()){
-    dim(X0) <- c(1, length(X0))
+    # dim(X0) <- c(1, length(X0))
     if(is.vector(Xref)){
         dim(Xref) <- c(length(Xref), 1)
     }
-    dX <- -log(pracma::pdist2(Xref, X0))
+    # dX <- -log(pracma::pdist2(Xref, X0))
+    dX <- -log(colMeans((t(Xref) - X0)^2))
     # dX[is.infinite(dX)] <- NA
     dim <- localdim(dX, rho)
     theta <- switch(method,
@@ -134,7 +135,7 @@ dtheta_allpoints <- function(X0, Xref = X0, rho = 0.98, method = "Ferro", method
         dim(X0) <- c(length(X0), 1)
         dim(Xref) <- c(length(Xref), 1)
     }
-    dtheta <- future.apply::future_apply(
+    dtheta <- apply(
       X0, 1, dtheta_onepoint, Xref = Xref, rho = rho, method = method, method.args = method.args, ...
     )
     invisible(dtheta)

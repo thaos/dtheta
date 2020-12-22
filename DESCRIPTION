@@ -13,8 +13,7 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     future,
-    future.apply,
-    pracma
+    future.apply
 Suggests:
     R.matlab
 
