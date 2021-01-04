@@ -34,12 +34,13 @@ for(i in seq.int(rep)){
 cat("\n")
 print("4/5")
 for(i in seq.int(rep)){
+  dX <- -log(sqrt((X - 4/5)^2))
   cat(".")
-  theta_f[i] <- dtheta_onepoint(4/5, X[, i, drop = FALSE], q, "Ferro")[2]
+  theta_f[i] <- dtheta_onepoint(dX, q, "Ferro")[2]
   cat(".")
-  theta_s[i] <- dtheta_onepoint(4/5, X[, i, drop = FALSE], q, "Sueveges")[2]
+  theta_s[i] <- dtheta_onepoint(dX, q, "Sueveges")[2]
   cat(".")
-  theta_c[i] <- dtheta_onepoint(4/5, X[, i, drop = FALSE], q, "Caby", method.args = list(m = 5))[2]
+  theta_c[i] <- dtheta_onepoint(dX, q, "Caby", method.args = list(m = 5))[2]
   cat("/")
 }
 boxplot(list(ferro = theta_f, sueveges = theta_s, caby = theta_c), main = "2x mod 1, z = 4/5")
@@ -47,12 +48,13 @@ boxplot(list(ferro = theta_f, sueveges = theta_s, caby = theta_c), main = "2x mo
 cat("\n")
 print("0")
 for(i in seq.int(rep)){
+  dX <- -log(sqrt((X - 0)^2))
   cat(".")
-  theta_f[i] <- dtheta_onepoint(0, X[, i, drop = FALSE], q, "Ferro")[2]
+  theta_f[i] <- dtheta_onepoint(dX, q, "Ferro")[2]
   cat(".")
-  theta_s[i] <- dtheta_onepoint(0, X[, i, drop = FALSE], q, "Sueveges")[2]
+  theta_s[i] <- dtheta_onepoint(dX, q, "Sueveges")[2]
   cat(".")
-  theta_c[i] <- dtheta_onepoint(0, X[, i, drop = FALSE], q, "Caby", method.args = list(m = 5))[2]
+  theta_c[i] <- dtheta_onepoint(dX, q, "Caby", method.args = list(m = 5))[2]
   cat("/")
 }
 boxplot(list(ferro = theta_f, sueveges = theta_s, caby = theta_c))
@@ -61,12 +63,13 @@ boxplot(list(ferro = theta_f, sueveges = theta_s, caby = theta_c), main = "2x mo
 cat("\n")
 print("1/3")
 for(i in seq.int(rep)){
+  dX <- -log(sqrt((X - 1/3)^2))
   cat(".")
-  theta_f[i] <- dtheta_onepoint(1/3, X[, i, drop = FALSE], q, "Ferro")[2]
+  theta_f[i] <- dtheta_onepoint(dX, q, "Ferro")[2]
   cat(".")
-  theta_s[i] <- dtheta_onepoint(1/3, X[, i, drop = FALSE], q, "Sueveges")[2]
+  theta_s[i] <- dtheta_onepoint(dX, q, "Sueveges")[2]
   cat(".")
-  theta_c[i] <- dtheta_onepoint(1/3, X[, i, drop = FALSE], q, "Caby", method.args = list(m = 5))[2]
+  theta_c[i] <- dtheta_onepoint(dX, q, "Caby", method.args = list(m = 5))[2]
   cat("/")
 }
 boxplot(list(ferro = theta_f, sueveges = theta_s, caby = theta_c), main = "2x mod 1, z = 1/3")
@@ -74,12 +77,13 @@ boxplot(list(ferro = theta_f, sueveges = theta_s, caby = theta_c), main = "2x mo
 cat("\n")
 print("1/pi")
 for(i in seq.int(rep)){
+  dX <- -log(sqrt((X - 1/pi)^2))
   cat(".")
-  theta_f[i] <- dtheta_onepoint(1/pi, X[, i, drop = FALSE], q, "Ferro")[2]
+  theta_f[i] <- dtheta_onepoint(dX, q, "Ferro")[2]
   cat(".")
-  theta_s[i] <- dtheta_onepoint(1/pi, X[, i, drop = FALSE], q, "Sueveges")[2]
+  theta_s[i] <- dtheta_onepoint(dX, q, "Sueveges")[2]
   cat(".")
-  theta_c[i] <- dtheta_onepoint(1/pi, X[, i, drop = FALSE], q, "Caby", method.args = list(m = 5))[2]
+  theta_c[i] <- dtheta_onepoint(dX, q, "Caby", method.args = list(m = 5))[2]
   cat("/")
 }
 boxplot(list(ferro = theta_f, sueveges = theta_s, caby = theta_c), main = "2x mod 1, z = 1/pi")

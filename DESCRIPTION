@@ -12,8 +12,7 @@ License: What license it uses
 Encoding: UTF-8
 LazyData: true
 Imports:
-    future,
-    future.apply
+    wordspace
 Suggests:
     R.matlab
 

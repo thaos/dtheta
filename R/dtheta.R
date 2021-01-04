@@ -109,13 +109,13 @@ localdim <- function(X, rho){
   return(dim)
 }
 
-dtheta_onepoint <- function(X0, Xref, rho = 0.98, method = "Ferro", method.args = list()){
+dtheta_onepoint <- function(dX, rho = 0.98, method = "Ferro", method.args = list()){
     # dim(X0) <- c(1, length(X0))
-    if(is.vector(Xref)){
-        dim(Xref) <- c(length(Xref), 1)
-    }
+    # if(is.vector(Xref)){
+    #    dim(Xref) <- c(length(Xref), 1)
+    # }
     # dX <- -log(pracma::pdist2(Xref, X0))
-    dX <- -log(colMeans((t(Xref) - X0)^2))
+    # dX <- -log(colMeans((t(Xref) - X0)^2))
     # dX[is.infinite(dX)] <- NA
     dim <- localdim(dX, rho)
     theta <- switch(method,
@@ -135,8 +135,17 @@ dtheta_allpoints <- function(X0, Xref = X0, rho = 0.98, method = "Ferro", method
         dim(X0) <- c(length(X0), 1)
         dim(Xref) <- c(length(Xref), 1)
     }
-    dtheta <- future.apply::future_apply(
-      X0, 1, dtheta_onepoint, Xref = Xref, rho = rho, method = method, method.args = method.args, ...
-    )
+    # wordspace.openmp(threads = 1) # number of threads for parallel computing
+    distmat <- wordspace::dist.matrix(X0, Xref, method = "euclidean")
+    distmat <- -log(distmat)
+    dtheta <- matrix(NA, nrow = 2, ncol = nrow(X0))
+    for (irow in seq.int(nrow(X0))) {
+      row <- distmat[irow, -irow]
+      dtheta[, irow] <- dtheta_onepoint(row, rho, method, method.args)
+    }
     invisible(dtheta)
 }
+
+
+
+

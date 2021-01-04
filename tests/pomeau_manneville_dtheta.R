@@ -1,8 +1,6 @@
 library(dtheta)
 library(R.matlab)
-library(future)
 
-future::plan(strategy = "multicore")
 
 ## Systeme de Pomeau-Manneville avec les parametres par defaut du papier de Davide
 "pom.man" = function(xt,a=0.91,epsil=0)
